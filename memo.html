@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>暗記カード - Penon</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>暗記カード</h1>
+      <p class="desc"><a href="./index.html" class="muted">← モード選択へ戻る</a></p>
+    </header>
+
+    <main class="container">
+      <section class="controls">
+        <button id="nextBtn" class="btn">次へ</button>
+        <span class="sep"></span>
+        <label><input type="checkbox" id="cat-artpen" checked /> artpen</label>
+        <label><input type="checkbox" id="cat-magnet" checked /> magnet</label>
+      </section>
+
+      <section class="quiz">
+        <div class="flip-card tap-area" id="tapArea" title="タップで答え表示">
+          <div class="flip-inner">
+            <div class="flip-face flip-front image-wrap">
+              <img id="memoImage" alt="memo" />
+            </div>
+            <div class="flip-face flip-back image-wrap">
+              <div id="memoAnswer" class="memo-answer"></div>
+            </div>
+          </div>
+        </div>
+        <div class="feedback" id="hint">画像をタップすると答えが表示されます</div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <a href="https://shop.penon.co.jp/view/category/artpen" target="_blank" rel="noreferrer">artpen</a>
+      /
+      <a href="https://shop.penon.co.jp/view/category/magnet" target="_blank" rel="noreferrer">magnet</a>
+      <span class="muted">（画像は外部サイトから直接表示）</span>
+    </footer>
+
+    <script src="./memo.js"></script>
+  </body>
+  </html>
