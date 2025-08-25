@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>入力モード - Penon</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>入力モード</h1>
+      <p class="desc"><a href="./index.html" class="muted">← モード選択へ戻る</a></p>
+    </header>
+
+    <main class="container">
+      <section class="controls">
+        <button id="nextBtn" class="btn">次へ</button>
+        <span class="sep"></span>
+        <span class="muted">画像を見て答えを入力</span>
+      </section>
+
+      <section class="quiz">
+        <div class="image-wrap" id="imageWrap">
+          <img id="inputImage" alt="input" />
+        </div>
+
+        <form id="inputForm" class="input-form">
+          <div class="form-row">
+            <label class="label" for="kind">種別</label>
+            <select id="kind" class="select">
+              <option value="アートペン">アートペン</option>
+              <option value="アートマグネット">アートマグネット</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="label" for="artist">作家</label>
+            <input id="artist" class="input-text" type="text" placeholder="例: ゴッホ" autocomplete="off" />
+          </div>
+          <div class="form-row">
+            <label class="label" for="title">作品名</label>
+            <input id="title" class="input-text" type="text" placeholder="例: オーヴェルの教会" autocomplete="off" />
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">判定</button>
+            <button class="btn ghost" id="giveupBtn" type="button">ギブアップ</button>
+          </div>
+        </form>
+
+        <div id="feedback" class="feedback"></div>
+        <div id="truth" class="truth hidden"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <a href="https://shop.penon.co.jp/view/category/artpen" target="_blank" rel="noreferrer">artpen</a>
+      /
+      <a href="https://shop.penon.co.jp/view/category/magnet" target="_blank" rel="noreferrer">magnet</a>
+      <span class="muted">（画像は外部サイトから直接表示）</span>
+    </footer>
+
+    <script src="./input.js"></script>
+  </body>
+  </html>
+

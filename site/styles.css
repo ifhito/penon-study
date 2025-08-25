@@ -21,13 +21,14 @@ body {
 .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .sep { flex: 1; }
 .quiz { background: var(--card); border-radius: 10px; padding: 16px; }
-.image-wrap { display: grid; place-items: center; background: #0b0e13; border-radius: 8px; overflow: hidden; min-height: 320px; }
-#quizImage { max-width: 100%; max-height: 480px; display: block; }
+.image-wrap { display: grid; place-items: center; background: #0b0e13; border-radius: 8px; overflow: hidden; min-height: clamp(240px, 52vh, 560px); }
+#quizImage, #memoImage { max-width: 100%; max-height: 70vh; height: auto; display: block; }
 .answer { display: flex; gap: 8px; margin-top: 12px; }
 .answer input { flex: 1; padding: 10px 12px; background: #0f141d; color: var(--text); border: 1px solid #1e2633; border-radius: 8px; }
 .btn { background: var(--accent); color: #0b0e13; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
 .btn:hover { filter: brightness(1.04); }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid #263145; }
+.tap-area { cursor: pointer; }
 .feedback { margin-top: 8px; font-weight: 600; }
 .feedback.ok { color: var(--accent-2); }
 .feedback.no { color: var(--danger); }
@@ -47,4 +48,53 @@ body {
 
 @media (min-width: 640px) {
   .choices { grid-template-columns: 1fr 1fr; }
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .container { padding: 8px; }
+  .header { padding: 16px 12px; }
+  .image-wrap { min-height: 50vh; }
+  #quizImage, #memoImage { max-height: 62vh; }
+  .btn, .choice { padding: 14px 16px; min-height: 44px; font-size: 16px; }
+  .stats { gap: 12px; font-size: 14px; }
+}
+
+/* input mode */
+.input-form { display: grid; gap: 10px; margin-top: 12px; }
+.form-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; }
+.label { color: var(--muted); }
+.input-text, .select { width: 100%; padding: 10px 12px; background: #0f141d; color: var(--text); border: 1px solid #1e2633; border-radius: 8px; }
+.form-actions { display: flex; gap: 8px; margin-top: 4px; }
+
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* landing */
+.mode-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.mode-card { display: block; background: var(--card); border: 1px solid #1e2633; border-radius: 12px; padding: 16px; text-decoration: none; color: var(--text); }
+.mode-card:hover { border-color: #2e3a52; }
+.mode-card h2 { margin: 0 0 6px; }
+.mode-card p { margin: 0; color: var(--muted); }
+
+@media (min-width: 760px) {
+  .mode-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* flip effect for memo */
+.flip-card { perspective: 1200px; }
+.flip-inner { position: relative; width: 100%; display: grid; transition: transform 0.6s ease; transform-style: preserve-3d; will-change: transform; }
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face { border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden; grid-area: 1 / 1; }
+.flip-back { transform: rotateY(180deg); display: grid; place-items: center; }
+.memo-answer { padding: 16px; text-align: center; font-size: clamp(16px, 2.6vw, 22px); color: var(--text); }
+
+/* ensure flip container gets a size via image-wrap
+   image-wrap already sets min-height; mirror that onto flip-card */
+.flip-card { display: block; }
+.flip-card .image-wrap { min-height: clamp(240px, 52vh, 560px); }
+
+@media (max-width: 480px) {
+  .memo-answer { font-size: 18px; padding: 14px; }
 }
