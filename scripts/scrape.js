@@ -12,7 +12,8 @@ const path = require('path');
 
 const CATEGORIES = [
   { name: 'artpen', url: 'https://shop.penon.co.jp/view/category/artpen' },
-  { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet' },
+  { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet?page=1' },
+  { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet?page=2' }
 ];
 
 function fetchPage(url) {
