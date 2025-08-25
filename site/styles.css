@@ -22,7 +22,7 @@ body {
 .sep { flex: 1; }
 .quiz { background: var(--card); border-radius: 10px; padding: 16px; }
 .image-wrap { display: grid; place-items: center; background: #0b0e13; border-radius: 8px; overflow: hidden; min-height: clamp(240px, 52vh, 560px); }
-#quizImage, #memoImage { max-width: 100%; max-height: 70vh; height: auto; display: block; }
+#quizImage, #memoImage, #inputImage { max-width: 100%; max-height: 70vh; height: auto; display: block; }
 .answer { display: flex; gap: 8px; margin-top: 12px; }
 .answer input { flex: 1; padding: 10px 12px; background: #0f141d; color: var(--text); border: 1px solid #1e2633; border-radius: 8px; }
 .btn { background: var(--accent); color: #0b0e13; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
@@ -55,7 +55,7 @@ body {
   .container { padding: 8px; }
   .header { padding: 16px 12px; }
   .image-wrap { min-height: 50vh; }
-  #quizImage, #memoImage { max-height: 62vh; }
+  #quizImage, #memoImage, #inputImage { max-height: 62vh; }
   .btn, .choice { padding: 14px 16px; min-height: 44px; font-size: 16px; }
   .stats { gap: 12px; font-size: 14px; }
 }
