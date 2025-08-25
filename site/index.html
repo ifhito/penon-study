@@ -13,6 +13,12 @@
     </header>
 
     <main class="container">
+      <section class="order-controls">
+        <span class="label">出題順序:</span>
+        <label><input type="radio" name="order" id="order-random" value="random" checked /> ランダム</label>
+        <label><input type="radio" name="order" id="order-seq" value="seq" /> 全件（順番）</label>
+      </section>
+
       <section class="mode-grid">
         <a class="mode-card" href="memo.html">
           <h2>暗記カード</h2>
@@ -39,5 +45,6 @@
     <footer class="footer">
       <span class="muted">GitHub Pages でホストされています</span>
     </footer>
+    <script src="./index.js"></script>
   </body>
   </html>

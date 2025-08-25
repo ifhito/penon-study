@@ -37,10 +37,39 @@ function kindFromCategory(cat) {
 const state = {
   items: [],
   current: null,
+  order: 'random',
+  seqList: [],
+  seqIdx: 0,
 };
+
+function getOrderMode() {
+  const p = new URLSearchParams(location.search);
+  const v = p.get('order') || localStorage.getItem('orderMode') || 'random';
+  return v === 'seq' ? 'seq' : 'random';
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rebuildSequence() {
+  state.seqList = shuffle(state.items);
+  state.seqIdx = 0;
+}
 
 function sampleNext() {
   if (!state.items.length) return null;
+  if (state.order === 'seq') {
+    if (state.seqIdx >= state.seqList.length) return null;
+    const it = state.seqList[state.seqIdx];
+    state.seqIdx += 1;
+    return it;
+  }
   return state.items[Math.floor(Math.random() * state.items.length)];
 }
 
@@ -58,6 +87,7 @@ function showItem(it) {
   const truth = document.getElementById('truth');
   truth.textContent = '';
   truth.classList.add('hidden');
+  renderProgress();
 }
 
 function checkAnswer() {
@@ -101,13 +131,23 @@ function reveal() {
 
 function next() {
   const it = sampleNext();
-  if (!it) return;
+  if (!it) {
+    const fb = document.getElementById('feedback');
+    if (state.order === 'seq') {
+      fb.textContent = '全て出題しました。次でリセットして再開します';
+      rebuildSequence();
+      renderProgress();
+    }
+    return;
+  }
   showItem(it);
 }
 
 async function init() {
   try {
     state.items = await loadItems();
+    state.order = getOrderMode();
+    if (state.order === 'seq') rebuildSequence();
     next();
   } catch (e) {
     console.error(e);
@@ -125,3 +165,14 @@ async function init() {
 
 init();
 
+function renderProgress() {
+  const el = document.getElementById('progressNum');
+  if (!el) return;
+  if (state.order === 'seq' && state.seqList.length > 0 && state.current) {
+    el.textContent = `${state.seqIdx} / ${state.seqList.length}`;
+  } else if (state.order === 'seq' && state.seqList.length > 0 && state.seqIdx >= state.seqList.length) {
+    el.textContent = `${state.seqList.length} / ${state.seqList.length}`;
+  } else {
+    el.textContent = '-';
+  }
+}

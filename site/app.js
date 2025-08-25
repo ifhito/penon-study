@@ -41,13 +41,54 @@ function similarity(a, b) {
   return 1 - dist / Math.max(na.length, nb.length);
 }
 
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getOrderMode() {
+  const p = new URLSearchParams(location.search);
+  const v = p.get('order') || localStorage.getItem('orderMode') || 'random';
+  return v === 'seq' ? 'seq' : 'random';
+}
+
+function allowedItems() {
+  const list = [];
+  const useArtpen = document.getElementById('cat-artpen').checked;
+  const useMagnet = document.getElementById('cat-magnet').checked;
+  for (const it of state.items) {
+    if ((it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet)) list.push(it);
+  }
+  return list;
+}
+
 const state = {
   items: [],
   pool: [],
   current: null,
+  order: 'random',
+  seqList: [],
+  seqIdx: 0,
+  seqDone: false,
   choices: [],
   score: { ok: 0, no: 0 },
 };
+
+function renderProgress() {
+  const el = document.getElementById('progressNum');
+  if (!el) return;
+  if (state.order === 'seq' && state.seqList.length > 0 && state.current) {
+    el.textContent = `${state.seqIdx} / ${state.seqList.length}`;
+  } else if (state.order === 'seq' && state.seqDone) {
+    el.textContent = `${state.seqList.length} / ${state.seqList.length}`;
+  } else {
+    el.textContent = '-';
+  }
+}
 
 function renderStats() {
   const { ok, no } = state.score;
@@ -56,19 +97,26 @@ function renderStats() {
   document.getElementById('scoreCorrect').textContent = ok;
   document.getElementById('scoreWrong').textContent = no;
   document.getElementById('scoreRate').textContent = rate + '%';
+  renderProgress();
+}
+
+function rebuildSequence() {
+  state.seqList = shuffle(allowedItems());
+  state.seqIdx = 0;
+  state.seqDone = state.seqList.length === 0;
 }
 
 function sampleNext() {
-  const allowed = [];
-  const useArtpen = document.getElementById('cat-artpen').checked;
-  const useMagnet = document.getElementById('cat-magnet').checked;
-  for (const it of state.items) {
-    if ((it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet)) {
-      allowed.push(it);
-    }
+  const list = allowedItems();
+  if (list.length === 0) return null;
+  if (state.order === 'seq') {
+    if (state.seqIdx > state.seqList.length) rebuildSequence();
+    if (state.seqIdx >= state.seqList.length) { state.seqDone = true; return null; }
+    const it = state.seqList[state.seqIdx];
+    state.seqIdx += 1;
+    return it;
   }
-  if (allowed.length === 0) return null;
-  return allowed[Math.floor(Math.random() * allowed.length)];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 function splitTokens(str) {
@@ -180,6 +228,7 @@ function showItem(it) {
     btn.addEventListener('click', () => handleChoice(text));
     wrap.appendChild(btn);
   }
+  renderProgress();
 }
 
 function handleChoice(selectedText) {
@@ -214,7 +263,19 @@ function handleChoice(selectedText) {
 function nextQuestion() {
   const it = sampleNext();
   if (!it) {
-    document.getElementById('feedback').textContent = '対象カテゴリに問題がありません';
+    const fb = document.getElementById('feedback');
+    if (state.order === 'seq') {
+      if (state.seqDone) {
+        fb.textContent = '全て出題しました。次でリセットして再開します';
+        rebuildSequence();
+        renderProgress();
+      } else {
+        fb.textContent = '対象カテゴリに問題がありません';
+      }
+    } else {
+      fb.textContent = '対象カテゴリに問題がありません';
+    }
+    renderProgress();
     return;
   }
   showItem(it);
@@ -224,16 +285,19 @@ async function init() {
   try {
     const data = await loadItems();
     state.items = data;
+    state.order = getOrderMode();
+    if (state.order === 'seq') rebuildSequence();
     nextQuestion();
   } catch (e) {
     console.error(e);
     document.getElementById('feedback').textContent = 'データの読み込みに失敗しました';
   }
   renderStats();
+  renderProgress();
 
   document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-  document.getElementById('cat-artpen').addEventListener('change', nextQuestion);
-  document.getElementById('cat-magnet').addEventListener('change', nextQuestion);
+  document.getElementById('cat-artpen').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); nextQuestion(); });
+  document.getElementById('cat-magnet').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); nextQuestion(); });
 
   document.getElementById('giveupBtn').addEventListener('click', () => {
     if (!state.current) return;
