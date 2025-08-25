@@ -6,6 +6,7 @@
   --accent: #4cc2ff;
   --accent-2: #7be495;
   --danger: #ff6b6b;
+  --card-size: clamp(240px, 72vmin, 560px);
 }
 
 * { box-sizing: border-box; }
@@ -21,8 +22,8 @@ body {
 .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .sep { flex: 1; }
 .quiz { background: var(--card); border-radius: 10px; padding: 16px; }
-.image-wrap { display: grid; place-items: center; background: #0b0e13; border-radius: 8px; overflow: hidden; min-height: clamp(240px, 52vh, 560px); }
-#quizImage, #memoImage, #inputImage { max-width: 100%; max-height: 70vh; height: auto; display: block; }
+.image-wrap { display: grid; place-items: center; background: #0b0e13; border-radius: 8px; overflow: hidden; width: min(100%, var(--card-size)); aspect-ratio: 1 / 1; margin: 0 auto; }
+#quizImage, #memoImage, #inputImage { width: 100%; height: 100%; object-fit: contain; display: block; }
 .answer { display: flex; gap: 8px; margin-top: 12px; }
 .answer input { flex: 1; padding: 10px 12px; background: #0f141d; color: var(--text); border: 1px solid #1e2633; border-radius: 8px; }
 .btn { background: var(--accent); color: #0b0e13; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
@@ -54,8 +55,7 @@ body {
 @media (max-width: 480px) {
   .container { padding: 8px; }
   .header { padding: 16px 12px; }
-  .image-wrap { min-height: 50vh; }
-  #quizImage, #memoImage, #inputImage { max-height: 62vh; }
+  /* square card keeps aspect via aspect-ratio, no override needed */
   .btn, .choice { padding: 14px 16px; min-height: 44px; font-size: 16px; }
   .stats { gap: 12px; font-size: 14px; }
 }
@@ -93,7 +93,7 @@ body {
 /* ensure flip container gets a size via image-wrap
    image-wrap already sets min-height; mirror that onto flip-card */
 .flip-card { display: block; }
-.flip-card .image-wrap { min-height: clamp(240px, 52vh, 560px); }
+.flip-card .image-wrap { width: min(100%, var(--card-size)); aspect-ratio: 1 / 1; }
 
 @media (max-width: 480px) {
   .memo-answer { font-size: 18px; padding: 14px; }
