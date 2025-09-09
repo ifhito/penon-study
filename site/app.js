@@ -60,8 +60,13 @@ function allowedItems() {
   const list = [];
   const useArtpen = document.getElementById('cat-artpen').checked;
   const useMagnet = document.getElementById('cat-magnet').checked;
+  const usePostcard = document.getElementById('cat-postcard') ? document.getElementById('cat-postcard').checked : true;
   for (const it of state.items) {
-    if ((it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet)) list.push(it);
+    if (
+      (it.category === 'artpen' && useArtpen) ||
+      (it.category === 'magnet' && useMagnet) ||
+      (it.category === 'postcard' && usePostcard)
+    ) list.push(it);
   }
   return list;
 }
@@ -131,22 +136,23 @@ function splitTokens(str) {
 function getArtist(alt) {
   const tokens = splitTokens(alt);
   if (tokens.length === 0) return '';
-  const generic = new Set(['アート', 'ペン', 'アートペン', 'マグネット', 'アートマグネット']);
+  const generic = new Set(['アート', 'ペン', 'アートペン', 'マグネット', 'アートマグネット', 'ポストカード']);
   if (tokens.length >= 2 && generic.has(tokens[0])) return tokens[1];
   return tokens[0];
 }
 
 function keywords(alt) {
-  const generic = new Set(['アート', 'ペン', 'アートペン', 'マグネット', 'アートマグネット', 'の', 'と']);
+  const generic = new Set(['アート', 'ペン', 'アートペン', 'マグネット', 'アートマグネット', 'ポストカード', 'の', 'と']);
   return splitTokens(alt).filter((t) => !generic.has(t) && t.length >= 2);
 }
 
 function buildChoices(answer) {
   const useArtpen = document.getElementById('cat-artpen').checked;
   const useMagnet = document.getElementById('cat-magnet').checked;
+  const usePostcard = document.getElementById('cat-postcard') ? document.getElementById('cat-postcard').checked : true;
   // pool from current category filters
   const pool = state.items.filter((it) => (
-    (it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet)
+    (it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet) || (it.category === 'postcard' && usePostcard)
   ));
   // unique by alt
   const seen = new Set();
@@ -298,6 +304,8 @@ async function init() {
   document.getElementById('nextBtn').addEventListener('click', nextQuestion);
   document.getElementById('cat-artpen').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); nextQuestion(); });
   document.getElementById('cat-magnet').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); nextQuestion(); });
+  const pc = document.getElementById('cat-postcard');
+  if (pc) pc.addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); nextQuestion(); });
 
   document.getElementById('giveupBtn').addEventListener('click', () => {
     if (!state.current) return;

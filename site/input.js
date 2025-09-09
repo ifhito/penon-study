@@ -31,7 +31,10 @@ function parseAlt(alt) {
 }
 
 function kindFromCategory(cat) {
-  return cat === 'artpen' ? 'アートペン' : 'アートマグネット';
+  if (cat === 'artpen') return 'アートペン';
+  if (cat === 'magnet') return 'アートマグネット';
+  if (cat === 'postcard') return 'ポストカード';
+  return '';
 }
 
 const state = {

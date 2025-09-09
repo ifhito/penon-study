@@ -32,8 +32,9 @@ function shuffle(arr) {
 function allowedItems() {
   const useArtpen = document.getElementById('cat-artpen').checked;
   const useMagnet = document.getElementById('cat-magnet').checked;
+  const usePostcard = document.getElementById('cat-postcard') ? document.getElementById('cat-postcard').checked : true;
   return state.items.filter((it) => (
-    (it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet)
+    (it.category === 'artpen' && useArtpen) || (it.category === 'magnet' && useMagnet) || (it.category === 'postcard' && usePostcard)
   ));
 }
 
@@ -103,6 +104,8 @@ async function init() {
   document.getElementById('nextBtn').addEventListener('click', next);
   document.getElementById('cat-artpen').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
   document.getElementById('cat-magnet').addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
+  const pc = document.getElementById('cat-postcard');
+  if (pc) pc.addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
   document.getElementById('tapArea').addEventListener('click', () => {
     if (!state.current) return;
     const ans = document.getElementById('memoAnswer');

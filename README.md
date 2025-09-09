@@ -1,8 +1,8 @@
-# Penon Quiz (Artpen / Magnet)
+# Penon Quiz (Artpen / Magnet / Postcard)
 
 GitHub Pages で公開できる、画像を見てタイトル（alt）を当てるクイズです。
 
-- 対象: https://shop.penon.co.jp/view/category/artpen / https://shop.penon.co.jp/view/category/magnet
+- 対象: https://shop.penon.co.jp/view/category/artpen / https://shop.penon.co.jp/view/category/magnet / https://shop.penon.co.jp/view/category/postcard
 - 取得項目: `.c-item__img` の画像 URL と `alt` 文字列
 - 方式: 事前スクレイピングで `site/data/items.json` を生成し、フロントは完全静的
 
@@ -33,4 +33,10 @@ python3 -m http.server 8000
 
 - 画像はクロスオリジンでも `<img>` 直参照で表示します（CORS 不要）。
 - 同サイトのページ構造変更により、抽出が失敗する場合があります。必要に応じて `scripts/scrape.js` の正規表現を調整してください。
-- カテゴリのページネーションには未対応です（1ページ想定）。必要なら拡張可能です。
+- ページネーション: magnet と postcard は `page=1`/`page=2` を取得対象に含めています。
+
+## Serena MCP（チュートリアル）
+
+Codex から Serena（MCP サーバー）を使う最小手順は次を参照してください：
+
+- `docs/serena-mcp-quickstart.md`

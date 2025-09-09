@@ -13,7 +13,9 @@ const path = require('path');
 const CATEGORIES = [
   { name: 'artpen', url: 'https://shop.penon.co.jp/view/category/artpen' },
   { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet?page=1' },
-  { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet?page=2' }
+  { name: 'magnet', url: 'https://shop.penon.co.jp/view/category/magnet?page=2' },
+  { name: 'postcard', url: 'https://shop.penon.co.jp/view/category/postcard?page=1' },
+  { name: 'postcard', url: 'https://shop.penon.co.jp/view/category/postcard?page=2' },
 ];
 
 function fetchPage(url) {
@@ -92,4 +94,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
