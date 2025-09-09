@@ -60,20 +60,32 @@ function shuffle(arr) {
   return a;
 }
 
+function allowedItems() {
+  const useArtpen = document.getElementById('cat-artpen') ? document.getElementById('cat-artpen').checked : true;
+  const useMagnet = document.getElementById('cat-magnet') ? document.getElementById('cat-magnet').checked : true;
+  const usePostcard = document.getElementById('cat-postcard') ? document.getElementById('cat-postcard').checked : true;
+  return state.items.filter((it) => (
+    (it.category === 'artpen' && useArtpen) ||
+    (it.category === 'magnet' && useMagnet) ||
+    (it.category === 'postcard' && usePostcard)
+  ));
+}
+
 function rebuildSequence() {
-  state.seqList = shuffle(state.items);
+  state.seqList = shuffle(allowedItems());
   state.seqIdx = 0;
 }
 
 function sampleNext() {
-  if (!state.items.length) return null;
+  const pool = allowedItems();
+  if (!pool.length) return null;
   if (state.order === 'seq') {
     if (state.seqIdx >= state.seqList.length) return null;
     const it = state.seqList[state.seqIdx];
     state.seqIdx += 1;
     return it;
   }
-  return state.items[Math.floor(Math.random() * state.items.length)];
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function showItem(it) {
@@ -164,6 +176,12 @@ async function init() {
     checkAnswer();
   });
   document.getElementById('giveupBtn').addEventListener('click', reveal);
+  const catArt = document.getElementById('cat-artpen');
+  const catMag = document.getElementById('cat-magnet');
+  const catPc = document.getElementById('cat-postcard');
+  if (catArt) catArt.addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
+  if (catMag) catMag.addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
+  if (catPc) catPc.addEventListener('change', () => { if (state.order === 'seq') rebuildSequence(); next(); });
 }
 
 init();
